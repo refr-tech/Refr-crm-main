@@ -1,0 +1,28 @@
+<h3 mat-dialog-title class="textL">Credit Balance</h3>
+<div mat-dialog-content class="textL">
+  <p>Defualt Exchange rate: {{ getCutRate() || refrCut }}% &nbsp; <span>Refr Earns: </span> ₹{{ payPaid - payGive || 0}}</p>
+
+
+  <mat-form-field appearance="outline" class="fullWidth">
+    <mat-label>Paid Amount</mat-label>
+    <input matInput [(ngModel)]="payPaid" type="number" min="100" max="9999999" (change)="getCut(payPaid)" [disabled]="makingChanges">
+    <mat-hint>This must be taken from the merchant</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="fullWidth">
+    <mat-label>Give Amount</mat-label>
+    <input matInput [(ngModel)]="payGive" type="number" min="10" max="9999999" [disabled]="makingChanges">
+    <mat-hint>This will be added to campaign balance</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="fullWidth">
+    <mat-label>Admin Name</mat-label>
+    <input matInput [(ngModel)]="adminName" type="text" [disabled]="makingChanges">
+  </mat-form-field>
+
+  <button mat-button [disabled]="makingChanges" (click)="Agree = !Agree" ><mat-icon>{{ !Agree ? 'toggle_off':'toggle_on'}}</mat-icon><span>Agree</span> Held me responsible for this transfer.</button>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial [disabled]="makingChanges" >Later</button>
+  <button mat-raised-button color="primary" [disabled]="makingChanges || !Agree" (click)="startPay()" >Start Payment</button>
+</div>

@@ -1,0 +1,110 @@
+::-webkit-scrollbar {width: 15px;height: 15px;}
+::-webkit-scrollbar-track {background: #fafafa;}
+::-webkit-scrollbar-thumb {background: #eeeeee;
+  width: 12px;height: 12px;border-radius: 22px; 
+  border-right: 2px solid #fafafa;
+  border-left: 1px solid #fafafa;
+  border-top: 2px solid #fafafa;
+  border-bottom: 2px solid #fafafa;
+}
+::-webkit-scrollbar-thumb:hover {background: #ffffff;}
+
+
+.col-card{ 
+  .card-box{
+      border-radius: 4px;
+      margin: 0 8px !important; padding: 8px !important;
+  }
+}
+
+
+.color-scheme-dark {
+    .col-card{ 
+        .card-box{
+            background: #000000;
+            box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+        }
+    }
+
+}
+.color-scheme-light {
+    .col-card{
+      .card-box{
+          background: #ffffff;
+          box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+      }
+    }
+
+}
+
+
+.progress{
+  vertical-align: middle;line-height: 20px;font-size: 20px;height: 20px;margin: 0 10px;padding:0;
+  span{display: inline-block;vertical-align: middle;border-radius: 10px;width: 20px;
+    padding: 0;margin: 10px 10px 10px 0;
+    position: relative;text-align: center; background: #512DA8; color: #ffffff;
+  }
+  .progress1{animation: loading 2s infinite; animation-delay: 0s;}
+  .progress2{animation: loading 2s infinite; animation-delay: 1s;}
+  .progress3{animation: loading 2s infinite; animation-delay: 2s;}
+}
+@keyframes loading {
+  0%   {margin: 10px 10px 10px 0;}
+  50%  {margin: 0px 10px 20px 0;}
+  100% {margin: 10px 10px 10px 0;}
+}
+
+
+.seperator {
+  position: relative;
+  text-align: center;
+  margin: 26px 28% 14px 28%;
+  padding: 0;
+
+  &:before {
+     content: "";
+     position: absolute;
+     top: 38%;
+     left: 0;
+     z-index: 1;
+     height: 1px;
+     width: 100%;
+  }
+  span {
+     padding: 0 1rem;
+     display: inline-block;
+     position: relative;
+     z-index: 2;
+     margin-bottom: 0.5rem;
+  }
+}
+.color-scheme-dark {
+  .seperator {
+    &:before {
+       background-color: #eeeeee;
+    }
+    span {
+       background-color: #000000;
+       color: #ffffff;
+    }
+  }
+}
+.color-scheme-light {
+  .seperator {
+    &:before {
+       background-color: #eeeeee;
+    }
+    span {
+       background-color: #ffffff;
+       color: #000000;
+    }
+  }
+}
+
+
+// .material-icons {
+//   transition: transform .5s;
+//   &.animate {
+//     transform: rotate(360deg);
+//   }
+// }

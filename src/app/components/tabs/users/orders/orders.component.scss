@@ -1,0 +1,20 @@
+.col-card {
+    .mat-form-field {
+        font-size: 14px;
+        width: 90%;
+        margin: 0 5%;
+    }
+    .card-box {
+        overflow: hidden;
+        table {
+            width: 100%;
+            td,
+            th {
+                width: 25%;
+            }
+        }
+        mat-paginator {
+            margin: 0 -18px;
+        }
+    }
+}

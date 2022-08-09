@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "site": "refr-crm",
+    "public": "crm",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites":[
+      {"source":"/api/**", "function":"ind_serve"},
+      {"source":"**", "destination":"/index.html"}
+    ]
+  }
+}

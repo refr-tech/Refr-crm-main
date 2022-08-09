@@ -1,0 +1,174 @@
+<div class="container">
+    <div class="row">
+
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>manage_accounts</mat-icon>
+                    </div>
+                    <p class="card-category">Total</p>
+                    <h3 class="card-title">0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/list-users' ">Users</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>local_offer</mat-icon>
+                    </div>
+                    <p class="card-category">Refill</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/store/campaigns' ">Campaigns</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>people_alt</mat-icon>
+                    </div>
+                    <p class="card-category">Registred</p>
+                    <h3 class="card-title">0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/stores' ">Stores</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>local_grocery_store</mat-icon>
+                    </div>
+                    <p class="card-category">Placed</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/user/orders' ">Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>circle</mat-icon>
+                    </div>
+                    <p class="card-category">Logistics</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/logistics' ">Logistics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>circle</mat-icon>
+                    </div>
+                    <p class="card-category">Gateway</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/transactions' ">Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>circle</mat-icon>
+                    </div>
+                    <p class="card-category">Earning</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/transactions' ">Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 dashStats">
+            <div class="card-stats b_white">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon b_primary c_white">
+                        <mat-icon>circle</mat-icon>
+                    </div>
+                    <p class="card-category">Taxes</p>
+                    <h3 class="card-title">₹0</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="stats c_primary">
+                        <mat-icon>launch</mat-icon>&nbsp;
+                        <a class="c_primary" [routerLink]=" '/transactions' ">Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-50 col-sm-100">
+            <p>User Growth</p>
+            <google-chart [data]="lineChart"></google-chart>
+        </div>
+        <div class="col col-50 col-sm-100">
+            <p>Store Growth</p>
+            <google-chart [data]="lineChart"></google-chart>
+        </div>
+        <div class="col col-40 col-sm-100">
+            <p>Store Growth</p>
+            <google-chart [data]="lineChart"></google-chart>
+        </div>
+        <div class="col col-60 col-sm-100">
+            <p>Store Growth</p>
+            <google-chart [data]="lineChart"></google-chart>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae maxime culpa deserunt, dolorum nulla rem expedita, doloremque natus fuga eum labore iure maiores debitis corrupti libero odit ad perspiciatis id.</p>

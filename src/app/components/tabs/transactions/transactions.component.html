@@ -1,0 +1,150 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col col-25 col-sm-40 col-card">
+            <div class="card-box">
+                <p>Stores</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-60 col-card">
+            <div class="card-box">
+                <p>Registred Today</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>This week</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>This month</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+
+
+        <div class="col col-50 col-sm-100 col-card">
+            <div class="card-box phenomenon">
+                <p>Track phenomenon (for DEV use only)</p>
+                <div class="mainP">
+                    <button mat-button (click)=" phenomenon = !phenomenon " ><mat-icon>{{ phenomenon ? 'lock_open':'lock'}}</mat-icon></button>
+                    <span class="divide"></span>
+                    <div class="subP">
+                    <div class="subnP">
+                    <input placeholder="Key" #kX [disabled]="!phenomenon" />
+                    <input placeholder="Query" #qX [disabled]="!phenomenon" />
+                    <input placeholder="Value" #vX [disabled]="!phenomenon" />
+                    </div>
+                        TRACKING ? <ng-container *ngIf="auth.user$ | async as mine">{{mine.name}} {{mine.uid}}</ng-container>
+                    </div>
+                    <span class="divide"></span>
+                    <button mat-button (click)=" startSearch(false, kX.value, qX.value, vX.value ) " [disabled]="!phenomenon" ><mat-icon>key</mat-icon></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-50 col-sm-100 col-card">
+            <div class="card-box finder">
+                <p>Find Payments by Phone or Email</p>
+                <button mat-button (click)=" searchType = 'last'; execute(); " ><mat-icon>{{ searchType == 'last' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon> Latest</button>
+                <button mat-button (click)=" searchType = 'id' " ><mat-icon>{{ searchType == 'id' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon> TID</button>
+            <!--
+                <button mat-button (click)=" searchType = 'phone' " ><mat-icon>{{ searchType == 'phone' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon> Phone</button>
+                <button mat-button (click)=" searchType = 'email' " ><mat-icon>{{ searchType == 'email' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon> Email</button>
+                <button mat-button (click)=" searchType = 'name' " ><mat-icon>{{ searchType == 'name' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon> Name</button>
+            -->
+            </div>
+        </div>
+
+        <div class="col col-100 col-sm-100 col-card">
+            <mat-form-field appearance="standard">
+                <mat-label>Find {{searchType == 'last' ? 'in':'by'}} {{searchType == 'last' ? 'Latest':''}}{{searchType == 'phone' ? 'Phone Number':''}}{{searchType == 'email' ? 'Email ID':''}}{{searchType == 'id' ? 'Store ID':''}}</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Universal Search" #input>
+                <button mat-icon-button matSuffix *ngIf="searchType !== 'last' " (click)="startSearch(true, searchType, '==', input.value)" ><mat-icon>search</mat-icon></button>
+                <button mat-icon-button matSuffix *ngIf="searchType == 'last' " ><mat-icon>category</mat-icon></button>
+                <button mat-icon-button matSuffix *ngIf="searchType == 'last' " ><mat-icon>rule</mat-icon></button>
+            </mat-form-field>
+            <div class="card-box">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="iconMode"> ID </th>
+                        <td mat-cell *matCellDef="let row" class="iconMode"> <button mat-icon-button (click)="auth.resource.copyClipboard(row.id)"><mat-icon>content_copy</mat-icon></button> </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="by">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="iconMode"> BY </th>
+                        <td mat-cell *matCellDef="let row" class="iconMode">  <button mat-icon-button (click)="auth.resource.copyClipboard(row.by)"><mat-icon>content_copy</mat-icon></button>  </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="to">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="iconMode"> TO </th>
+                        <td mat-cell *matCellDef="let row" class="iconMode">  
+                            <button mat-icon-button (click)="auth.resource.copyClipboard(row.to)"><mat-icon>content_copy</mat-icon></button>  
+                            <!--button mat-icon-button (click)=" deleteTranz(row.id) " [disabled]=" row.to !== 'zn99lfRpB4bDy4KBvu4K1QpSMBk2' "><mat-icon>delete</mat-icon></button--> 
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="paid">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Paid </th>
+                        <td mat-cell *matCellDef="let row"> {{row.amTotal}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="method">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Method </th>
+                        <td mat-cell *matCellDef="let row"> 
+                            <span *ngIf="row.to == 'Δ' && row.type.includes('firstBalance')  ">ONBOARD</span>
+                            <span *ngIf="row.to == 'Δ' && row.type.includes('campaignBalance')  ">CAMPAIGN</span>
+                            <span *ngIf="row.to == 'Δ' && !row.type.includes('firstBalance') && !row.type.includes('campaignBalance')  ">XXX</span>
+                            <span *ngIf="row.to !== 'Δ' ">{{row.journey}}</span> 
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <td mat-cell *matCellDef="let row"> {{row.status || 0}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="benifit">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Benifit </th>
+                        <td mat-cell *matCellDef="let row"> Unknown </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="manage">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="iconMode"> Edit </th>
+                        <td mat-cell *matCellDef="let row" class="iconMode"> <button mat-icon-button><mat-icon>edit</mat-icon></button> </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <app-spinner *ngIf="!dataSource"></app-spinner>
+                <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of users"></mat-paginator>
+            </div>
+
+        </div>
+
+    </div>
+</div>

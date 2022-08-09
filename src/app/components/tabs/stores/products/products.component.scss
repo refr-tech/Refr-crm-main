@@ -1,0 +1,63 @@
+.col-card {
+    .mat-form-field {
+        font-size: 14px;
+        width: 90%;
+        margin: 0 5%;
+    }
+    .card-box {
+        overflow: hidden;
+        table {
+            width: 100%;
+            td,
+            th {
+                max-width: 25%;
+                padding: 0;
+                //overflow-wrap: anywhere;
+            }
+            .iconMode{max-width: 50px;width: 50px; text-align: center;}
+            .burn {padding: 0 4px;
+                display: inline-block;
+                font-size: 8px;
+                line-height: 14px;
+                vertical-align: middle;
+                color: #ffffff;
+                border-radius: 0 8px 8px 8px;
+            }
+            td p {    
+                padding: 0 !important;
+                margin: 0 0px !important;
+                font-size: 12px !important;
+                line-height: 14px !important;
+            }
+        }
+        mat-paginator {
+            margin: 0 -18px;
+        }
+    }
+}
+
+.phenomenon{
+    .mainP{display: flex;
+        .subP{height: 36px;
+            line-height: 14px;
+            font-size: 8px; text-align: center;
+            .subnP{display: flex;
+                input{
+                    border: 1px solid transparent;
+                    border-bottom: 2px solid #eeeeee;
+                    outline: none;
+                    margin: 0 8px;
+                    max-width: 75px;
+                    line-height: 18px;
+                    font-size: 14px; text-align: center;
+                    background: #ffffff;
+                }
+            }
+        }
+    }
+
+}
+
+.finder{
+    button{padding: 0 8px;}
+}

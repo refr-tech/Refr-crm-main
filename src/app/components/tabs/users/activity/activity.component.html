@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="row" *ngIf="user$ | async as userINFO">
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box" style="background:transparent; box-shadow:none; " *ngIf="auth.user$ | async as mine">
+                <button mat-button [disabled]="makingChanges" (click)="editFunds(mine.uid, mine.name)" >Add Refr Cash</button>
+                <!--button mat-button [disabled]="makingChanges" (click)="ProvideFunds()" >₹500 Credits</button-->
+            </div>
+
+            <div class="card-box">
+                <p>User Overview</p>
+                <table>
+                    <tr>
+                        <th colspan="2">{{userINFO?.name}}</th>
+                    </tr>
+                    <tr>
+                        <th>User A/c</th>
+                        <td>₹ {{userINFO?.acBalC}}</td>
+                    </tr>
+                    <tr>
+                        <th>User Reserved</th>
+                        <td>₹ {{userINFO?.acBalCr}}</td>
+                    </tr>
+                    <tr>
+                        <th>R-Cash Given</th>
+                        <td>₹ {{userINFO?.acBalGivenC || 0}}</td>
+                    </tr>
+                    <tr>
+                        <th>Store A/c</th>
+                        <td>₹ {{userINFO?.acBalV}}</td>
+                    </tr>
+                    <tr>
+                        <th>Store Reserved</th>
+                        <td>₹ {{userINFO?.acBalVr}}</td>
+                    </tr>
+                    <tr>
+                        <th>Campaign A/c</th>
+                        <td>₹ {{userINFO?.acBalH}}</td>
+                    </tr>
+                    <tr>
+                        <th>Campaign Credits</th>
+                        <td>₹ {{userINFO?.acBalGivenV || 0}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>Orders</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>Cashback</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>Value</p>
+                <h2>0</h2>
+            </div>
+        </div>
+
+        <div class="col col-50 col-sm-100 col-card">
+            <div class="card-box">
+                <p>Edit User Info</p>
+            </div>
+        </div>
+        
+
+
+
+    </div>
+</div>

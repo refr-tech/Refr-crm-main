@@ -1,0 +1,620 @@
+<div class="container">
+    <div class="row" *ngIf="store$ | async as store">
+
+        <div class="col col-30 col-sm-100 col-card ">
+          <div class="card-box" style="background:transparent; box-shadow:none; " *ngIf="auth.user$ | async as mine">
+              <button mat-button [disabled]="makingChanges" (click)="editFunds(mine.uid, mine.name)" >Add Campaign Funds</button>
+              <!--button mat-button [disabled]="makingChanges" (click)="ProvideFunds()" >₹500 Credits</button-->
+          </div>
+          
+            <div class="card-box about">
+                <p>Store Overview</p>
+                <table style="width: 100%;">
+                    <tr>
+                        <th>Store A/c</th>
+                        <th>₹ {{store?.userINFO?.acBalV}}</th>
+                        <th class="textR" colspan="2">Reserved ₹ {{store?.userINFO?.acBalVr}}</th>
+                    </tr>
+                    <tr>
+                        <th>Campaign A/c</th>
+                        <th class="textR" colspan="3">₹ {{store?.userINFO?.acBalH}}</th>
+                    </tr>
+                    <tr>
+                        <th>Primary User</th>
+                        <td colspan="w"><a class="c_primary">{{store?.userINFO?.name}}</a></td>
+                        <td class="textR"><a mat-icon-button (click)="viewPrimeUser = !viewPrimeUser"><mat-icon>more</mat-icon></a></td>
+                    </tr>
+                    <ng-container *ngIf="viewPrimeUser">
+                    <tr>
+                        <th>User A/c</th>
+                        <th>₹ {{store?.userINFO?.acBalC}}</th>
+                        <th class="textR" colspan="2">Reserved ₹ {{store?.userINFO?.acBalCr}}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Campaign Credits</th>
+                        <th class="textR" colspan="2">₹ {{store?.userINFO?.acBalGivenV || 0}}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Refr Cash</th>
+                        <th class="textR" colspan="2">₹ {{store?.userINFO?.acBalGivenC || 0}}</th>
+                    </tr>
+                    </ng-container>
+                    <tr>
+                        <th>Campaigns</th>
+                        <td colspan="3"><a [routerLink]=" '/campaigns/' + store.id " class="c_warn">Manage {{store?.userINFO?.storeCam.length}} Campaigns</a></td>
+                    </tr>
+                    <tr>
+                        <th>Products</th>
+                        <td colspan="3"><a [routerLink]=" '/products/' + store.id " class="c_warn">{{store?.products}} Products in {{store.proCat.length}} categories</a></td>
+                    </tr>
+                    <tr>
+                        <th>Access &nbsp; {{1}}</th>
+                        <td colspan="3">
+                          <a class="" mat-icon-button><mat-icon>account_circle</mat-icon></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>Sales</p>
+                <h2>0</h2>
+            </div>
+        </div>
+        
+        <div class="col col-25 col-sm-50 col-card">
+            <div class="card-box">
+                <p>Rewards</p>
+                <h2>0</h2>
+            </div>
+        </div>
+        
+        <div class="col col-20 col-sm-100 col-card">
+            <div class="card-box">
+                <p>Visits</p>
+                <h2>0</h2>
+            </div>
+        </div>
+        
+
+        <div class="col col-50 col-sm-100 col-card">
+
+            <div class="card-box" style="padding-top: 0px !important; min-height: 100vh;">
+
+<nav mat-tab-nav-bar>
+  <a mat-tab-link *ngFor="let link of ['Manage Store', 'Activity Log']"
+     (click)="activeLink = link"
+     [active]="activeLink == link"> {{link}} </a>
+</nav>
+                
+<ng-container *ngIf="activeLink == 'Manage Store'">
+    
+
+
+
+    <div class="container-next b_persist c_invert">
+
+  <form (submit)="true"> 
+    <mat-form-field appearance="legacy" class="fullWidth">
+      <mat-label>Choose type</mat-label>
+      <mat-select [disabled]="makingChanges || true"
+      [ngModel]="storeLoc.storeType" (selectionChange)="auth.resource.storeTypeNow = storeLoc.storeType" placeholder="Your store type" name="storeType" required>
+        <mat-option *ngFor="let sT of auth.resource.env.storeTyp" [value]="sT.id">{{sT.name}} Store</mat-option>
+      </mat-select>
+      <mat-error>Store type is required.</mat-error>
+    </mat-form-field>
+  </form>
+
+  <form (submit)="true"> 
+
+    <mat-form-field appearance="legacy" class="fullWidth">
+      <mat-label>Category</mat-label>
+      <mat-select [disabled]="makingChanges" (selectionChange)="storeLoc.storeSubCat = ''"
+      [(ngModel)]="storeLoc.storeCat" placeholder="Your store category" name="storeCat" required>
+        <mat-option *ngFor="let sT of auth.resource.categoryList" [value]="sT.id">{{sT.title}}</mat-option>
+      </mat-select>
+      <mat-error>Store category is required.</mat-error>
+    </mat-form-field>
+  
+
+    <mat-form-field appearance="legacy" class="fullWidth">
+      <mat-label>Sub Category</mat-label>
+      <mat-select [disabled]="makingChanges" (selectionChange)=" changeCatData(storeLoc.storeCat, storeLoc.storeSubCat) "
+      [(ngModel)]="storeLoc.storeSubCat" placeholder="Your store sub-category" name="storeSubCat" required>
+      <ng-container *ngFor="let sT of auth.resource.categoryList">
+        <ng-container *ngFor="let scT of sT.items">
+          <mat-option *ngIf="scT.type == storeLoc.storeCat" [value]="scT.id">{{scT.name}}</mat-option>
+        </ng-container>
+      </ng-container>
+      </mat-select>
+      <mat-error>Store sub-category is required.</mat-error>
+    </mat-form-field>
+  </form>
+        <!--h3>Store information</h3-->
+        <div class="textC">
+          <div style="margin: 0 5% 0 5%; padding: 0;">
+            <img class="c_accent b_white" style="
+            margin: 0;padding: 0; display: inline-block;
+            border-radius: 50%; border: 3px solid;
+            width: 110px;
+            height: 110px;
+            object-fit: cover;"
+            [src]=" storeLogo ? storeLogo :'assets/other/avatarB.svg' " 
+            alt="Logo" />
+          </div>
+          <button mat-button class="b_primary c_white" (click)="takePicture('logo')" 
+          style="    border-radius: 18px;
+          transform: translateY(-18px);">Change</button>
+        </div>
+
+
+        <form (submit)="updateStoreName(store.by)">
+            <mat-form-field appearance="legacy" class="fullWidth">
+              <mat-label>Store name</mat-label>
+              <input matInput maxlength="30" placeholder="Store Name" name="storename" [formControl]="auth.resource.last" autocomplete="off" required>
+              <button mat-icon-button color="primary" type="submit" matSuffix [disabled]=" makingChanges || 
+              auth.resource.last.value == storeName || 
+              auth.resource.last.invalid "><mat-icon>{{storeName == auth.resource.last.value ? 'edit':'save'}}</mat-icon></button>
+              <mat-error>issue: {{ auth.resource.last.value?.length < 2 ? 'min 2 & max 30' : 'Use* A-Za-z' }}</mat-error>
+              <mat-hint align="end">{{auth.resource.last.value?.length}}/30</mat-hint>
+            </mat-form-field>
+        
+        </form>
+ 
+ 
+        <form>
+          <mat-form-field appearance="legacy" class="fullWidth">
+            <mat-label>Store Email</mat-label>
+            <input matInput [value]="store?.email" placeholder="Your email address" readonly>
+            <mat-icon matSuffix class="c_primary" *ngIf="store?.email">verified</mat-icon>
+          </mat-form-field>
+        </form>
+
+
+        <!--h3>Contact information</h3-->
+        <div class="textC">
+          <div class="c_accent b_white" style="margin: 22px 5% 0 5%; padding: 0;border-radius: 16px;">
+            <img style="
+            width: -webkit-fill-available;
+            margin: 0;padding: 0;
+            border-radius: 16px; border: 3px solid;
+            height: 180px; display: inherit;
+            object-fit: cover;"
+            [src]=" storeBanner ? storeBanner : 'assets/brand/opengraph.png' " 
+            alt="Banner" />
+          </div>
+          <button mat-button class="b_primary c_white" (click)="takePicture('banner')"
+          style="    border-radius: 18px;
+          transform: translateY(-18px);">Change</button>
+        </div>
+ 
+        
+        <form *ngIf="store?.phone">
+            <mat-form-field appearance="legacy" class="fullWidth">
+              <mat-label>Store number</mat-label>
+              <input matInput [value]="store?.phone" placeholder="Your phone number" readonly>
+              <span matPrefix>+91</span>
+              <mat-icon matSuffix class="c_primary">verified</mat-icon>
+            </mat-form-field>
+            </form>
+
+
+                <h3 class="textC"><br>Store Locations</h3>
+                <!--p>You have no locations that are active.</p-->
+        
+                <form (submit)="true" *ngFor="let loc of listLoc; let i = index;">
+                  <mat-form-field appearance="legacy" class="fullWidth">
+                    <mat-label>Address {{i+1}}</mat-label>
+                    <input matInput placeholder="Location name" [value]="loc.line1" readonly>
+                    <span matPrefix style="vertical-align: middle;"><mat-icon>map</mat-icon>&nbsp;</span>
+                    <button mat-icon-button matSuffix><mat-icon>more_vert</mat-icon></button>
+                    <mat-hint align="end">{{loc.city}}, {{loc.zip}}</mat-hint>
+                  </mat-form-field>
+                </form>
+        
+                <!--form (submit)="true">
+                  <mat-form-field appearance="legacy" class="fullWidth">
+                    <mat-label>Address</mat-label>
+                    <input matInput placeholder="Location name" value="Some Location" readonly>
+                    <button mat-icon-button color="primary" matSuffix><mat-icon>{{true ? 'visibility_off':'visibility_on'}}</mat-icon></button>
+                    <mat-hint align="end">Mumbai, Maharashtra</mat-hint>
+                  </mat-form-field>
+                </form>
+        
+                <div style="margin: 22px 5% 0 5%; display: flex;">
+                  <button mat-button disabled>Show inactive</button>
+                  <span class="divide"></span>
+                  <button mat-button routerLink="/store/add-location"><mat-icon>add</mat-icon>New Location</button>
+                </div-->
+            
+
+
+        <h3 class="textC"><br>KYC details</h3>
+
+
+        <form (submit)="updateName(store.by)">
+        
+            <mat-form-field appearance="legacy" class="fullWidth">
+              <mat-label>Merchant name</mat-label>
+              <input matInput maxlength="30" placeholder="Your Name" name="firstname" [formControl]="auth.resource.first" autocomplete="off" required>
+              <button mat-icon-button color="primary" type="submit" matSuffix [disabled]=" makingChanges || 
+              auth.resource.first.value == dataCurrent.name || 
+              auth.resource.first.invalid "><mat-icon>{{dataCurrent.name == auth.resource.first.value ? 'edit':'save'}}</mat-icon></button>
+              <mat-error>issue: {{ auth.resource.first.value?.length < 2 ? 'min 2 & max 30' : 'Use* A-Za-z' }}</mat-error>
+              <mat-hint align="end">{{auth.resource.first.value?.length}}/30</mat-hint>
+            </mat-form-field>
+        
+            
+        </form>
+
+
+        <form *ngIf="store?.userINFO?.axess?.includes('phone')">
+            <mat-form-field appearance="legacy" class="fullWidth">
+              <mat-label>Primary number</mat-label>
+              <input matInput [value]="store?.userINFO?.phone" placeholder="Your phone number" readonly>
+              <mat-icon matSuffix class="c_primary">verified</mat-icon>
+            </mat-form-field>
+            </form>
+        
+            
+        <form>
+
+        <form *ngIf="store?.userINFO?.axess?.includes('facebook') || store?.userINFO?.axess?.includes('google')">
+            <mat-form-field appearance="legacy" class="fullWidth">
+              <mat-label>Primary Email</mat-label>
+              <input matInput [value]="store?.userINFO?.email" placeholder="Your email address" readonly>
+              <mat-icon matSuffix class="c_primary">verified</mat-icon>
+            </mat-form-field>
+            </form>
+
+        <mat-form-field appearance="legacy" class="fullWidth">
+          <mat-label>Aadhar Card</mat-label>
+          <input matInput [value]="'499118665246'" placeholder="Your email address" readonly>
+          <mat-icon matSuffix class="c_primary">verified</mat-icon>
+        </mat-form-field>
+        </form>
+
+        <form>
+        <mat-form-field appearance="legacy" class="fullWidth">
+          <mat-label>Pan Card</mat-label>
+          <input matInput [value]="'AAAPZ1234C'" placeholder="Your email address" readonly>
+          <mat-icon matSuffix class="c_primary">verified</mat-icon>
+        </mat-form-field>
+        </form>
+
+  
+        <div class="textC">
+          <div class="c_accent b_white" style="margin: 0 5% 0 5%; padding: 0;border-radius: 16px; height: 186px;">
+            <img style="
+            width: -webkit-fill-available;
+            margin: 0;padding: 0;
+            border-radius: 16px; border: 3px solid;
+            height: 180px; display: inherit;
+            object-fit: cover;"
+            [src]=" storeBannersActive ? storeBannersActive : 'assets/brand/opengraph.png' " 
+            alt="Banner" (onload)=" onloadIMG(storeBannersActive) " />
+          </div>
+
+          <div style="display: flex; align-items: center; margin: 8px 5% 0 10%;">
+            <ng-container *ngIf="storeBannersList.length > 1">
+            <button mat-icon-button *ngFor="let x of storeBannersList" (click)="storeBannersActive = x"><mat-icon>{{ x !== storeBannersActive ? 'radio_button_unchecked':'radio_button_checked'}}</mat-icon></button>
+            </ng-container>
+            <span class="divide"></span>
+            <button mat-flat-button color="primary" 
+            [disabled]="!storeBannersActive" 
+            (click)=" removeStoreBanner( storeBannersActive ) "
+            style=" border-radius: 18px 0 0 18px; ">Remove</button>
+            <button mat-flat-button color="primary"
+            [disabled]="storeBannersList.length >= 5"  
+            (click)="takePicture('banners')"
+            style=" border-radius: 0 18px 18px 0; ">Add New</button>
+          </div>
+        </div>
+ 
+    </div>
+      
+    <div class="container-next b_persist c_invert">
+
+        <div class="timetable">
+        <table class="textL">
+
+  <ng-container *ngIf=" !storeLoc.storeType || storeLoc.storeType == 'Both' || storeLoc.storeType == 'Onli' ">
+            <tr>
+              <td colspan="3">Set delivery distance</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <button mat-button color="primary" [disabled]="makingChanges" (click)=" updateOrdr( 'delivery', storeLoc.delivery, 'Citywide'  ) "><mat-icon>{{storeLoc.delivery == 'Citywide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Citywide</button>
+                <button mat-button color="primary" [disabled]="makingChanges" (click)=" updateOrdr( 'delivery',  storeLoc.delivery, 'Nationwide' ) "><mat-icon>{{storeLoc.delivery == 'Nationwide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Nationwide</button>
+              </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">...</td>
+              </tr>
+
+            <tr>
+              <td colspan="3">Set transactions</td>
+            </tr>
+            <tr style="font-size: 14px;">
+              <td colspan="2">Cash On Delivery</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'COD',  storeLoc.COD, !storeLoc.COD ) "
+                labelPosition="before" [(ngModel)]="storeLoc.COD" name="COD">{{storeLoc.COD ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+
+            <tr style="font-size: 14px;">
+              <td colspan="2">Return</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'return',  storeLoc.return, !storeLoc.return ) "
+                labelPosition="before" [(ngModel)]="storeLoc.return" name="return">{{storeLoc.return ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+            <tr style="font-size: 14px;">
+              <td colspan="2">Exchange</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'exchange',  storeLoc.exchange, !storeLoc.exchange ) "
+                labelPosition="before" [(ngModel)]="storeLoc.exchange" name="exchange">{{storeLoc.exchange ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+            <tr style="font-size: 14px;">
+              <td colspan="2">Refund</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'refund',  storeLoc.refund, !storeLoc.refund ) "
+                labelPosition="before" [(ngModel)]="storeLoc.refund" name="refund">{{storeLoc.refund ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="3">...</td>
+            </tr>
+
+            <tr style="font-size: 14px;">
+              <td colspan="2">Hide Phone Number</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'phoneHide',  storeLoc.phoneHide, !storeLoc.phoneHide ) "
+                labelPosition="before" [(ngModel)]="storeLoc.phoneHide" name="phoneHide">{{storeLoc.phoneHide ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="3">...</td>
+            </tr>
+
+            <tr>
+              <td colspan="3">Require logistics partner</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <button mat-button color="primary" [disabled]="makingChanges"  (click)=" updateOrdr( 'logistics', storeLoc.logistics, !storeLoc.logistics  ) "><mat-icon>{{storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> Yes, provide me with one.</button>
+                <button mat-button color="primary" [disabled]="makingChanges"  (click)=" updateOrdr( 'logistics', storeLoc.logistics, !storeLoc.logistics  ) "><mat-icon>{{!storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> No, we have our logistics network.</button>
+              </td>
+            </tr>
+  </ng-container>
+
+  <ng-container *ngIf=" !storeLoc.storeType || storeLoc.storeType == 'Both' || storeLoc.storeType == 'Offl' ">
+            <tr>
+              <td colspan="3">...</td>
+            </tr>
+            <tr>
+              <td colspan="3">Set opening hours</td>
+            </tr>
+            <tr class="dateEditor">
+              <td [attr.colspan]="storeLoc.opensDaily ? 1 : 3"><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.opensDaily" name="daily">{{storeLoc.opensDaily ? 'Daily':'Choose by Weekdays'}}</mat-slide-toggle></td>
+              <td *ngIf="storeLoc.opensDaily">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.opensDailyS" name="opensDailyS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.opensDaily">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.opensDailyE" name="opensDailyE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+
+
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openMon" name="monday">MON</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openMon" colspan="2">Closed</td>
+              <td *ngIf="storeLoc.openMon">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges"
+                  matInput [(ngModel)]="storeLoc.openMonS" name="openMonS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openMon" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openMonE" name="openMonE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openTue" name="tuesday">TUE</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openTue" colspan="2">Closed</td>
+              <td *ngIf="storeLoc.openTue">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openTueS" name="openTueS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openTue" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openTueE" name="openTueE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openWed" name="wednesday">WED</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openWed" colspan="2">Closed</td>
+              <td *ngIf="storeLoc.openWed">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openWedS" name="openWedS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openWed" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openWedE" name="openWedE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openThu" name="thursday">THU</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openThu" colspan="2" >Closed</td>
+              <td *ngIf="storeLoc.openThu">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openThuS" name="openThuS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openThu" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openThuE" name="openThuE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openFri" name="friday">FRI</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openFri" colspan="2" >Closed</td>
+              <td *ngIf="storeLoc.openFri">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openFriS" name="openFriS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openFri" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openFriE" name="openFriE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openSat" name="saturday">SAT</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openSat" colspan="2" >Closed</td>
+              <td *ngIf="storeLoc.openSat">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges"
+                  matInput [(ngModel)]="storeLoc.openSatS" name="openSatS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openSat" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openSatE" name="openSatE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openSun" name="sunday">SUN</mat-slide-toggle></td>
+              <td *ngIf="!storeLoc.openSun" colspan="2" >Closed</td>
+              <td *ngIf="storeLoc.openSun">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openSunS" name="openSunS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openSun" class="dateEditor">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openSunE" name="openSunE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <button mat-button [disabled]="makingChanges" (click)="updateTiming()">Update Timings</button>
+              </td>
+            </tr>
+
+</ng-container>
+        </table>
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+</ng-container>
+
+<ng-container *ngIf="activeLink == 'Activity Log'">
+    <div style="padding: 8px 0 0 0;">
+        <p>The store has no logs.</p>
+    </div>
+</ng-container>
+
+            </div>
+        </div>
+
+        <div class="col col-20 col-sm-100 b_white" [class.hideAll]="!showCode1 || storeType !== 'Both' && storeType !== 'Offl' ">
+            <p><button mat-icon-button (click)=" downloadPOS('svg', store.id, store.name) " ><mat-icon>download</mat-icon></button> &nbsp; QR Code for POS</p>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div class="b_white" #canvasX1 id="canvasX1"></div>
+          </div>
+        </div>
+
+        <div class="col col-20 col-sm-100 b_white" [class.hideAll]=" !showCode2 || storeType !== 'Both' && storeType !== 'Onli' ">
+            <p><button mat-icon-button (click)=" downloadInvoice('svg') "><mat-icon>download</mat-icon></button> &nbsp; QR Code Invoice</p>
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <div class="b_white" #canvasX2 id="canvasX2"></div>
+            </div>
+        </div>
+
+        <div class="col col-20 col-sm-100 b_white" [class.hideAll]=" !showCode3 || true ">
+            <p><button mat-icon-button (click)=" downloadSubs('svg') "><mat-icon>download</mat-icon></button> &nbsp; QR Code Subs</p>
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <div class="b_white" #canvasX3 id="canvasX3"></div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

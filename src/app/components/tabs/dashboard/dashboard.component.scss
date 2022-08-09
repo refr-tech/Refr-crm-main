@@ -1,0 +1,49 @@
+.dashStats {
+    .card-stats {
+        margin: 18px 8px 0 8px;
+        padding: 0;
+        color: #333;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
+        border-radius: 6px;
+        .card-header {
+            margin: 0 15px;
+            padding: 0;
+            text-align: right;
+            .card-icon {
+                margin: -8px 15px 0 0;
+                padding: 8px 12px;
+                float: left;
+                border-radius: 40% 50% 50% 50%;
+                box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
+            }
+            .card-category {
+                margin: 0 !important;
+                padding: 10px 0 0 0 !important;
+                color: #999;
+                font-size: 14px !important;
+            }
+            .card-title {
+                margin: 0 !important;
+                padding: 0 !important;
+                color: #3C4858;
+                font-size: 18px !important;
+            }
+        }
+        .card-footer {
+            padding: 10px 0;
+            margin: 0 15px;
+            display: flex;
+            border-top: 1px solid #eee;
+            align-items: center;
+            .stats {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                a {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}

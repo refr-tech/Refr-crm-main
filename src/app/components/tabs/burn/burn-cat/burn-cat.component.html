@@ -1,0 +1,244 @@
+<div class="container">
+    <div class="row">
+
+
+        <div class="col col-30 col-sm-100 col-card">
+            <div style="margin: 0 0 16px 0; text-align:center;">
+            <button mat-raised-button (click)=" createNewCat() ">Create New</button>
+            </div>
+            
+
+            <div class="card-box">
+                <ng-container *ngFor="let cL of cat">
+                <div style="display: flex; align-items: center; margin: 0 0 8px 0;">
+                    <img style="height: 40px; border-radius: 8px;" [src]="cL.img"/>
+                    <h4 style="margin-bottom: 0 !important;">{{cL.tit}}<br>{{cL.products|| 0}} products</h4>
+                <span class="divide"></span>
+                    <a mat-icon-button (click)=" updateOldCat(cL) "><mat-icon>edit</mat-icon></a>
+                </div>
+                <p *ngFor="let sc of cL.subCat">- {{sc.tit}}</p>
+                </ng-container>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="col col-50 col-sm-100 col-card">
+
+
+            <div class="card-box" *ngIf="createNew">
+
+                        <div style="margin: 0 0 22px 0;">
+                        <p>Create Catagory</p>
+                
+                        <div  style="display: flex; align-items: center; justify-content: center;margin: 0 0 22px 0;">
+                            <button (click)="takePicture('cN-Logo')" *ngIf="!cN.img" style="height: 133px; text-align: center;
+                            line-height: 133px;
+                            padding: 0;
+                            margin: 0;
+                            border: 0;
+                            background: #fafafa;
+                            width: -webkit-fill-available;">Catagory Logo</button>
+                            <div *ngIf="cN.img" class="textC" style="width: 120px;
+                            display: inline-block;">
+                        <img style="height: 120px;
+                        display: inline-block;" [src]="cN.img"/>
+                        <button mat-button (click)="takePicture('cN-Logo')" [disabled]="makingChanges">Change</button>
+                            </div>
+                        </div>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Catagory Title</mat-label>
+                <input matInput [(ngModel)]="cN.tit" (change)="setCatID()" [disabled]="makingChanges">
+            </mat-form-field>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Catagory ID</mat-label>
+                <input matInput [ngModel]="cN.id" readonly [disabled]="makingChanges">
+                <span matPrefix>app.refr.club/burn/</span>
+            </mat-form-field>
+
+                        </div>
+
+                        <div class="textR">
+                            <button mat-raised-button (click)="createCat()" [disabled]="makingChanges">Create Burn Catagory</button>
+                        </div>
+   
+            </div>
+
+
+            <div class="card-box" *ngIf="createUpdate">
+
+                <div style="margin: 0 0 22px 0;">
+                    <p>Update Catagory</p>
+            
+                    <div  style="display: flex; align-items: center; justify-content: center;margin: 0 0 22px 0;">
+                        <button (click)="takePicture('cU-Logo')" *ngIf="!cU.img" style="height: 133px; text-align: center;
+                        line-height: 133px;
+                        padding: 0;
+                        margin: 0;
+                        border: 0;
+                        background: #fafafa;
+                        width: -webkit-fill-available;">Catagory Logo</button>
+                        <div *ngIf="cU.img" class="textC" style="width: 120px;
+                        display: inline-block;">
+                        <img style="height: 120px; display: inline-block;" [src]="cU.img"/>
+                        <button mat-button (click)="takePicture('cU-Logo')" [disabled]="makingChanges">Change</button>
+                        </div>
+                    </div>
+
+        <mat-form-field appearance="legacy" class="formFull">
+            <mat-label>Catagory Title</mat-label>
+            <input matInput [(ngModel)]="cU.tit" (change)="setCatID()" readonly [disabled]="makingChanges">
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="formFull">
+            <mat-label>Catagory ID</mat-label>
+            <input matInput [ngModel]="cU.id" readonly [disabled]="makingChanges">
+            <span matPrefix>app.refr.club/burn/</span>
+        </mat-form-field>
+
+                    </div>
+
+                        <div style="margin: 0 0 22px 0;">
+                        <p>Catagory banners</p>
+
+                        <button (click)="takePicture('cU-Banner')" *ngIf="cU.banners.length == 0" style="height: 200px; text-align: center;
+                        line-height: 200px;
+                        padding: 0;
+                        margin: 0;
+                        border: 0;
+                        background: #fafafa;
+                        width: -webkit-fill-available;">Catagory Banners</button>
+                        <img *ngIf="cU.banners.length > 0" style="    margin: 0 5%;
+                        height: 200px;
+                        width: 90%;
+                        object-fit: cover;" [src]="bannerX.img"/>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Product Id</mat-label>
+                <input matInput [(ngModel)]=" bannerX.url " [disabled]="!bannerX.img">
+                <span matPrefix>app.refr.club/burn-shop/</span>
+            </mat-form-field>
+
+
+                        <div style="display: flex; margin: 0 5%;">
+                        <a mat-icon-button *ngFor="let banner of cU.banners" (click)="bannerX = banner;"><mat-icon>{{ bannerX.img == banner.img ? 'radio_button_checked':'radio_button_unchecked'}}</mat-icon></a>
+                        <span class="divide"></span>
+                        <button mat-icon-button *ngIf="bannerX.img" (click)="removeBanner('cU-Banner', bannerX.img)"><mat-icon>delete_sweep</mat-icon></button>
+                        <button mat-icon-button (click)="takePicture('cU-Banner')"><mat-icon>add_box</mat-icon></button>
+                        </div>
+                        </div>
+
+
+
+                        <div style="margin: 0 0 22px 0;">
+                        <p>New In</p>
+
+                        <button (click)="takePicture('cU-NewIN')" *ngIf="cU.newIN.length == 0" style="height: 200px; text-align: center;
+                        line-height: 200px;
+                        padding: 0;
+                        margin: 0;
+                        border: 0;
+                        background: #fafafa;
+                        width: -webkit-fill-available;">New In Banners</button>
+                        <img *ngIf="cU.newIN.length > 0" style="    margin: 0 5%; height: 200px; width: 90%; object-fit: cover;" [src]="newINX.img"/>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Product Id</mat-label>
+                <input matInput [(ngModel)]=" newINX.url " [disabled]="!newINX.img">
+                <span matPrefix>app.refr.club/burn-shop/</span>
+            </mat-form-field>
+
+
+                        <div style="display: flex; margin: 0 5%;">
+                        <a mat-icon-button *ngFor="let newIN of cU.newIN" (click)="newINX = newIN;"><mat-icon>{{ newIN.img == newINX.img ? 'radio_button_checked':'radio_button_unchecked'}}</mat-icon></a>
+                        <span class="divide"></span>
+                        <button mat-icon-button *ngIf="newINX.img" (click)="removeBanner('cU-NewIN', newINX.img)"><mat-icon>delete_sweep</mat-icon></button>
+                        <button mat-icon-button (click)="takePicture('cU-NewIN')"><mat-icon>add_box</mat-icon></button>
+                        </div>
+
+                        </div>
+
+
+
+                        <div style="margin: 0 0 22px 0;">
+                        <p>Brand Spotlight</p>
+
+                        <button (click)="takePicture('cU-Spotlight')" *ngIf="cU.spot.length == 0" style="height: 200px; text-align: center;
+                        line-height: 200px;
+                        padding: 0;
+                        margin: 0;
+                        border: 0;
+                        background: #fafafa;
+                        width: -webkit-fill-available;">Spotlight Banners</button>
+                        <img *ngIf="cU.spot.length > 0" style=" 
+                        margin: 0 auto;
+                        height: 200px;
+                        width: 200px;
+                        object-fit: cover;
+                        display: inherit;
+                        " [src]="spotX.img"/>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Product id</mat-label>
+                <input matInput [(ngModel)]=" spotX.url " [disabled]="!spotX.img">
+                <span matPrefix>app.refr.club/burn-shop/</span>
+            </mat-form-field>
+
+                        <div style="display: flex; margin: 0 5%;">
+                        <a mat-icon-button *ngFor="let spot of cU.spot" (click)="spotX = spot;"><mat-icon>{{ spot.img == spotX.img ? 'radio_button_checked':'radio_button_unchecked'}}</mat-icon></a>
+                        <span class="divide"></span>
+                        <button mat-icon-button *ngIf="spotX.img" (click)="removeBanner('cU-Spotlight', spotX.img)"><mat-icon>delete_sweep</mat-icon></button>
+                        <button mat-icon-button (click)="takePicture('cU-Spotlight')"><mat-icon>add_box</mat-icon></button>
+                        </div> 
+
+                        </div>
+
+
+
+                        <!--div style="margin: 0 0 22px 0;">
+                        <p>Sub Catagory</p>
+                        
+                <h4 *ngFor="let sc of c.subCat">{{sc.tit}}</h4>
+
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>Title</mat-label>
+                <input matInput>
+            </mat-form-field>
+                
+            <br>
+                        
+            <mat-form-field appearance="legacy" class="formFull">
+                <mat-label>id</mat-label>
+                <input matInput>
+                <span matPrefix>app.refr.club/sc-</span>
+            </mat-form-field>
+
+                        </div-->
+
+
+
+                        <div class="textR">
+                            <button mat-raised-button (click)="updateCat()" [disabled]="makingChanges">Update Burn Catagory</button>
+                        </div>
+                        
+                        
+            </div>
+        </div>
+
+
+
+
+
+        <!--div class="col col-20 col-sm-100 textC">
+            <button mat-raised-button (click)="createNew = !createNew">Create New</button>
+        </div-->
+
+
+
+
+    </div>
+</div>
